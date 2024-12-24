@@ -3,25 +3,19 @@ import pygame
 
 
 class Coin(pygame.sprite.Sprite):
-    def __init__(self, win_width, win_height):
+    def __init__(self, win_width, win_height, images, x, y):
         pygame.sprite.Sprite.__init__(self)
         img = pygame.image.load('../res/coin.png').convert_alpha()
         self.image = img
-        self.coins = []
-        self.loadRects()
+        self.coins = images
         self.rect = self.coins[0].get_rect()
         self.win_width = win_width
         self.win_height = win_height
-        self.x = self.win_width / 2
-        self.y = self.win_height / 2
+        self.x = x
+        self.y = y
         self.rect.center = [self.x, self.y]
         self.aniFrame = 0
 
-    def loadRects(self):
-        for col in range(5):
-            rect = pygame.Rect(col * 16, 0, 16, 16)
-            img = self.image.subsurface(rect)
-            self.coins.append(img)
 
     def update(self, tick):
         if tick % 10 == 0:

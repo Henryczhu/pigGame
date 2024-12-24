@@ -1,7 +1,7 @@
 import pygame
 
 import entities.Pig
-import money.coin
+import money.CoinManager
 import tiles.TileManager
 
 pygame.init()
@@ -28,8 +28,8 @@ def resizeAll():
     pygame.display.quit()
     screen = pygame.display.set_mode((win_width, win_height))
     tileManager.resize(win_width, win_height)
+    coinManager.resize(win_width, win_height)
     pig.resize(win_width, win_height)
-    coin.resize(win_width, win_height)
 
 
 win_width = 1920
@@ -41,9 +41,9 @@ clock = pygame.time.Clock()
 tileManager = tiles.TileManager.TileManager(win_width, win_height)
 collectables = []
 
-pig = entities.Pig.Pig(win_width, win_height)
+coinManager = money.CoinManager.CoinManager(win_width, win_height)
 
-coin = money.coin.Coin(win_width, win_height)
+pig = entities.Pig.Pig(win_width, win_height)
 
 tick = 0
 
@@ -51,6 +51,7 @@ run = True
 while run:
     clock.tick(FRAME_RATE)
     screen.fill((0, 0, 0))
+    print(clock.get_fps())
 
     tick += 1
 
@@ -59,16 +60,19 @@ while run:
         collectables.append(coll)
     tileManager.render(screen)
 
+    coinManager.update(tick)
+    coinManager.render(screen)
+
     collide = pig.checkClosest(collectables)
     if collide is not None:
         print(collide)
         tileManager.harvest(collectables[collide])
+        coinManager.createCoin(collectables[collide].x, collectables[collide].y)
         del collectables[collide]
     pig.update()
     pig.render(screen)
 
-    coin.update(tick)
-    coin.render(screen)
+
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -76,7 +80,6 @@ while run:
                 resizeWin(True)
             if event.key == pygame.K_MINUS:
                 resizeWin(False)
-                tileManager.resize(win_width, win_height)
         if event.type == pygame.QUIT:
             run = False
 
