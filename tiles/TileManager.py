@@ -14,7 +14,7 @@ class TileManager:
         self.spawn_rate = 20
         self.special_tiles = random.choices(
             population=[1, 2, 3, 4, 5, 6],
-            weights=[0, 0.05, 0.45, 0, 0.05, 0.45],
+            weights=[0, 0.1, 0.4, 0, 0.1, 0.4],
             k=10
         )
 

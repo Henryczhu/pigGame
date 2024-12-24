@@ -20,17 +20,27 @@ class CoinManager:
             img = self.image.subsurface(rect)
             self.images.append(img)
 
-    def update(self, tick):
+    def update(self, tick, tx, ty):
+        gained = 0
+        delete = []
         for coin in self.coins:
-            coin.update(tick)
+            if coin.update(tick, tx, ty):
+                print(coin)
+                delete.append(coin)
+        for coin in delete:
+            gained += 1
+            self.coins.remove(coin)
+        return gained
 
     def render(self, screen):
         for coin in self.coins:
             coin.render(screen)
 
     def resize(self, win_width, win_height):
+        self.win_width = win_width
+        self.win_height = win_height
         for coin in self.coins:
-            coin.resize(win_width, win_height)
+            coin.resize(self.win_width, self.win_height)
 
     def createCoin(self, x, y):
         self.coins.append(Coin.Coin(self.win_width, self.win_height, self.images, x, y))
